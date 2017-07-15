@@ -1,0 +1,94 @@
+* {
+	box-sizing: border-box;
+}
+html,body {
+	height: 100%;
+	font-size: 14px;
+	color: #333;
+	font-family: NotoSansHans-Regular,AvenirNext-Regular,arial,Hiragino Sans GB,"Microsoft Yahei","Hiragino Sans GB","WenQuanYi Micro Hei",sans-serif;
+	margin: 0;
+}
+.container {
+	padding-left: 15px;
+	padding-right: 15px;
+}
+.left {
+	float: left !important;
+}
+.right {
+	float: right!important;
+}
+.navbar:after,.navbar:before,.container:after,.container:before,.clearfix:after,.clearfix:before,.navbar-list:after,.navbar-list:before,.navbar:after,.navbar:before,.navbar:after,.navbar:before {
+	display: table;
+	content: " ";
+}
+.navbar:after,.container:after,.clearfix:after,.navbar:after,.navbar:after,.navbar:after {
+	clear: both;
+}
+.btn {
+	background: #eee;
+	border: 1px solid #ddd;
+	padding: 10px 15px;
+	cursor: pointer;
+	letter-spacing: 1px;
+}
+.btn:hover {
+	background: #fff;
+}
+.form-control {
+	height: 38px;
+	width: 100%;
+	text-indent: 10px;
+}
+
+
+.navbar {
+	display: block;
+	border-bottom: 1px solid #ddd;
+	height: 60px;
+	margin-bottom: 20px;
+}
+.navbar .brand {
+	display: block;
+	float: left;
+	font-size: 25px;
+	font-weight: bold;
+	color: #f00;
+	letter-spacing: 2px;
+}
+.navbar a {
+	text-decoration: none;
+	line-height: 60px;
+}
+.navbar-list {
+	display: block;
+	margin: 0;
+	list-style: none;
+	float: left;
+}
+.navbar-list li {
+	display: block;
+	float: left;
+}
+.navbar-list > li > a {
+	display: block;
+	padding: 0 15px;
+	float: left;
+}
+.navbar-list > li > a:hover,.navbar-list > li > a:focus,.navbar-list > li > a:active {
+	background: #ddd;
+}
+.message {
+	margin-bottom: 10px;
+	border: 1px solid #999;
+}
+.message .user {
+	display: inline-block;
+	text-decoration: none;
+	color: #666;
+	padding: 10px 15px;
+}
+.message .content {
+	padding: 20px;
+	background: #eee;
+}
