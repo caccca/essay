@@ -178,6 +178,7 @@
 				tag: 'span',
 				html: 'WIN!!!'
 			},
+			/* 缎带,用来标记地雷 */
 			ribbon: {
 				tag: 'span',
 				css: {
@@ -271,7 +272,7 @@
 				ctrl.submit(game.start);
 				resetBtn.click(game.reset);
 
-			}, 
+			},
 			win: function(){
 				game.setStatus('win');
 				$('.' + opt.mine.class).unbind('mousedown');
@@ -284,10 +285,10 @@
 			},
 			setLevel: function(){
 				switch (level) {
-					case 2: 
+					case 2:
 						y = 16; x = 16; total=40;
 						break;
-					case 3: 
+					case 3:
 						y = 16; x = 30; total= 99;
 						break;
 					default :
