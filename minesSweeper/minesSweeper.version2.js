@@ -124,9 +124,9 @@
 
 			// 地雷样式
 			mine: {
-				tag: 'span',
+				tag: 'div',
 				css: {
-					display: 'table-cell',
+					display: 'block',
 					width: '30px',
 					height: '30px',
 					'line-height': '30px',
@@ -135,7 +135,8 @@
 					margin: '-1px 0 0 -1px',
 					padding: 0,
 					cursor: 'pointer',
-					'text-align': 'center'
+					'text-align': 'center',
+                                        float: 'left',
 				},
 				class: 'sweeper-mine'
 			},
