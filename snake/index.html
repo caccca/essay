@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>snake</title>
+</head>
+<body>
+    <canvas id="snake"></canvas>
+    <script>
+        var log = console.log.bind(console);
+        /* COLOR */
+        var COLOR_BG = '#ccc';
+        var COLOR_SNAKE = '#000';
+        var COLOR_WALL = '#0af';
+        var COLOR_FOOD = 'green';
+        /*  */
+        var COLS = 40;
+        var ROWS = 30;
+        var SIZE = 8;
+        /* 方向 */
+        var DIR_LEFT = 37;
+        var DIR_UP = 38;
+        var DIR_RIGHT = 39;
+        var DIR_DOWN = 40;
+        var DIR_VALUES = {};
+        DIR_VALUES[DIR_LEFT] = -1;
+        DIR_VALUES[DIR_UP] = -COLS;
+        DIR_VALUES[DIR_RIGHT] = 1;
+        DIR_VALUES[DIR_DOWN] = COLS;
+
+        var canvas = document.querySelector('#snake');
+        var ctx = canvas.getContext('2d');
+
+        var snake = [];
+        var walls = [];
+        var emptyBlock = [];
+        var dir = DIR_UP;
+        var tmpDir = DIR_UP;
+        var numsOfFood = 4;
+        var food = [];
+        var moving = false;
+        var interval = null;
+        var speed = 100;
+
+        start();
+        function start() {
+            init();
+            window.addEventListener('keydown', setDirection);
+            if (interval) {
+                clearInterval(interval);
+            }
+            interval = setInterval(move, speed);
+        }
+        function gameOver(status) {
+            window.removeEventListener('keydown', setDirection);
+            clearInterval(interval);
+            ctx.fillStyle = '#f00';
+            ctx.font = '20px Consolas';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('GAME OVER!!', COLS / 2 * SIZE, ROWS / 2 * SIZE);
+        }
+        function move() {
+            moving = true;
+            var tmp = snake[0];
+            // 判断方向是否相反
+            if (DIR_VALUES[dir] + DIR_VALUES[tmpDir] !== 0) {
+                dir = tmpDir;
+            }
+            tmp += DIR_VALUES[dir];
+
+            // 边界判断
+            if (walls.indexOf(tmp) !== -1) {
+                gameOver();
+            }
+            // 吃自己
+            if (snake.indexOf(tmp) !== -1) {
+                gameOver();
+            }
+            // 移动
+            snake.unshift(tmp);
+            emptyBlock = emptyBlock.filter(function (item) {
+                return item !== tmp;
+            });
+            draw(tmp, COLOR_SNAKE);
+            // 吃食物
+            if (food.indexOf(tmp) !== -1) {
+                food = food.filter(function (item) {
+                    return item !== tmp;
+                });
+                randomFood();
+            } else {
+                var tail = snake.pop();
+                emptyBlock.push(tail);
+                clear(tail, COLOR_SNAKE);
+            }
+            moving = false;
+        }
+        function setDirection(e) {
+            if (!moving && [DIR_DOWN, DIR_LEFT, DIR_UP, DIR_RIGHT].indexOf(e.keyCode) !== -1) {
+                tmpDir = e.keyCode;
+            }
+        }
+        function init() {
+            canvas.setAttribute('width', COLS * SIZE);
+            canvas.setAttribute('height', ROWS * SIZE);
+            canvas.style.background = COLOR_BG;
+
+            /* 蛇 */
+            snake = [getPos(COLS/2, ROWS/2), getPos(COLS/2, ROWS/2 + 1)];
+            snake.map(function (item) {
+                draw(item, COLOR_SNAKE);
+            });
+
+            emptyBlock = [];
+            walls = [];
+            for (var y = 0; y < ROWS; y++) {
+                for (var x = 0; x < COLS; x++) {
+                    var pos = getPos(x, y);
+                    if (x === 0 || y === 0 || x === COLS - 1 || y === ROWS - 1) {
+                        /* 墙 */
+                        walls.push(pos);
+                        draw(pos, COLOR_WALL);
+                    } else if (snake.indexOf(pos) === -1) {
+                        /* 空格 */
+                        emptyBlock.push(pos);
+                    }
+                }
+            }
+            /* 食物 */
+            randomFood();
+        }
+        function draw(pos, style) {
+            pos = parsePos(pos);
+            ctx.fillStyle = style;
+            ctx.fillRect(pos[0] * SIZE, pos[1] * SIZE, SIZE - 1, SIZE - 1);
+        }
+        function clear(pos) {
+            pos = parsePos(pos);
+            ctx.clearRect(pos[0] * SIZE, pos[1] * SIZE, SIZE - 1, SIZE - 1);
+        }
+        function randomFood() {
+            while (food.length < numsOfFood) {
+                var tmp = emptyBlock.splice(~~(Math.random() * emptyBlock.length), 1)[0]
+                food.push(tmp);
+                draw(tmp, COLOR_FOOD);
+            }
+        }
+        function getPos(x, y) {
+            return x + y * COLS;
+        }
+        function parsePos(pos) {
+            var x = pos % COLS;
+            var y = ~~(pos / COLS);
+            return [x, y];
+        }
+    </script>
+</body>
+</html>
