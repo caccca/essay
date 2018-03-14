@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        #canlendar {
+            margin:  0 auto;
+        }
+        .week-day {
+            width: 220px;
+        }
+        .week-day div, .day {
+            float: left;
+            width: 30px;
+            text-align: center;
+            border: 1px solid #eee;
+        }
+        #select-today {
+            background: #fff;
+            border: 1px solid #eee;
+            color: #333;
+            outline: 0;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        #select-today:hover {
+            box-shadow: 0 0 10px #000;
+        }
+    </style>
+</head>
+<body>
+    <div id="canlendar" style="width: 220px;padding-right: 10px;">
+        <div id="select-box">
+            <select name="year" id="select-year"></select>
+            <select name="month" id="select-month"></select>
+            <button id="select-today">返回今天</button>
+        </div>
+        <div class="week-day">
+            <div>日</div>
+            <div>一</div>
+            <div>二</div>
+            <div>三</div>
+            <div>四</div>
+            <div>五</div>
+            <div>六</div>
+        </div>
+        <div id="canlendar-days">
+
+        </div>
+    </div>
+    <script>
+        var log = console.log.bind(console);
+
+        var now = new Date();
+        var activeYear = now.getFullYear();
+        var activeMonth = now.getMonth() + 1;
+
+        var canlendarDays = document.querySelector('#canlendar-days');
+        var selectYear = document.querySelector('#select-year');
+        var selectMonth = document.querySelector('#select-month');
+        var selectToday = document.querySelector('#select-today');
+        init();
+        function init() {
+            for (var year = 1900; year <= 2050; year ++) {
+                var props = {value: year, text: year + '年'};
+                if (year === activeYear) {
+                    props['selected'] = true;
+                }
+                var node = createElement('option', props);
+                selectYear.append(node);
+            }
+            for (var month = 1; month <= 12; month ++) {
+                var props = {value: month, text: month + '月'};
+                if (month === activeMonth) {
+                    props['selected'] = true;
+                }
+                var node = createElement('option', props);
+                selectMonth.append(node);
+            }
+
+            renderDays(canlendarDays, activeYear, activeMonth);
+
+            selectYear.addEventListener('change', onChangeDate);
+            selectMonth.addEventListener('change', onChangeDate);
+            selectToday.addEventListener('click', function () {
+                activeMonth = now.getMonth() + 1;
+                activeYear = now.getFullYear();
+                renderDays(canlendarDays, activeYear, activeMonth);
+            });
+        }
+
+        function onChangeDate(e) {
+            activeMonth = parseInt(selectMonth.value);
+            activeYear = parseInt(selectYear.value);
+            renderDays(canlendarDays, activeYear, activeMonth);
+        }
+        function createElement(tagname, props) {
+            var node = document.createElement(tagname);
+            for (var i in props) {
+                if (i === 'text') {
+                    node.innerHTML = props[i];
+                } else {
+                    node.setAttribute(i, props[i]);
+                }
+            }
+            return node;
+        }
+        function getDateFromGivenMonth(year, month) {
+            var date = new Date(year, month - 1);
+            var day = (d = date.getDay()) === 0 ? 7 : d;
+            var dateArr  = [];
+            for (var i = 0; i < 42; i++) {
+                dateArr[i] = new Date(date.getTime() + (i - day) * 86400000);
+            }
+            return dateArr;
+        }
+
+
+        function renderDays(el, year, month) {
+            var dateArr = getDateFromGivenMonth(year, month);
+            el.innerHTML = '';
+            for (var i = 0; i < dateArr.length; i++) {
+                var date = dateArr[i];
+                var props = {'class': 'day', text: date.getDate()};
+                if (date.toLocaleDateString() === now.toLocaleDateString()) {
+                    props.style = 'color: #f00';
+                } else if (date.getMonth() + 1 !== activeMonth) {
+                    props.style = 'color: #999';
+                }
+                var node = createElement('div', props);
+                el.append(node);
+            }
+        }
+    </script>
+</body>
+</html>
