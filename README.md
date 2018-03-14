@@ -5,4 +5,4 @@
 [贪吃蛇](https://caccca.github.io/essay/snake)
 [简陋的日历](https://caccca.github.io/essay/canlendar)
 [扫雷](https://caccca.github.io/essay/minesSweeper/demo.html)
-[字符雨](https://caccca.github.io/essay/minesSweeper/demo.html)
+[字符雨](https://caccca.github.io/essay/rainingCharacter/demo.html)
