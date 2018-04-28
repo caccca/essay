@@ -1,3 +1,11 @@
+<template>
+    <div class="card"
+         :class="classObj"
+         @click="handleClick"
+         @mouseenter.shift="handleClick">
+        <div class="figure" v-if="this.figure !== 14">{{ text }}</div>
+    </div>
+</template>
 <script>
 	import { mapGetters, mapMutations } from 'vuex'
 	export default {
@@ -9,34 +17,41 @@
 					return val >= 0 && val < 54 && (val | 0) === val;
 				}
 			},
-			clickable: {
+			clickAble: {
 				type: Boolean,
 				default: false,
 			},
 		},
-		data () {
-			return {
-				active: false,
-			}
-		},
 		methods: {
 			handleClick () {
-				if (this.$store.has(this.num)) {
-					this.active = false;
-					this.addCard(this.num);
-				} else {
-					this.active = true;
-					this.removeCard(this.num);
-				}
-			}
+				if (this.clickAble) {
+				    this.toggleActive(this.num)
+                }
+			},
+            ...mapMutations({
+                toggleActive: 'toggleActiveCard'
+            })
 		},
 		computed: {
 			pattern () {
 				return this.num % 4;
 			},
+            active () {
+			    return this.activeCards && this.activeCards.indexOf(this.num) !== -1;
+            },
 			figure () {
 				return Math.floor(this.num / 4) + 1;
 			},
+            classObj () {
+			    return {
+                    spade: this.pattern === 0,
+                    heart: this.pattern === 1,
+                    club: this.pattern === 2,
+                    diamond: this.pattern === 3,
+                    joker: this.figure === 14,
+                    active: this.active,
+                }
+            },
 			text () {
 				var str = null;
 				switch (this.figure) {
@@ -60,36 +75,9 @@
 				}
 				return str;
 			},
-			...mapGetters({
-				hasCard: 'has',
-				activeCards: 'activeCards'
-			}),
-			...mapMutations({
-				removeCard: 'remove',
-				addCard: 'add',
-			})
-		},
-		render (createElement) {
-			var children = this.text === null ? '' : [createElement('div', {class: 'figure'}, this.text)];
-			var props = {
-				class: {
-					card: true,
-					spade: this.pattern === 0,
-					heart: this.pattern === 1,
-					club: this.pattern === 2,
-					diamond: this.pattern === 3,
-					joker: this.figure === 14,
-					active: this.active,
-				}
-			};
-			if (this.clickable) {
-				props.on = {
-					click: this.handleClick,
-				}
-			}
+			...mapGetters(['activeCards']),
 
-			console.log(this.$store.mutations);
-			return createElement('div', props, children);
-		}
+		},
+
 	}
 </script>
